@@ -5,12 +5,16 @@ window.addEventListener("load", startApp);
 // Global variable that stores the cpu-guess - type is a whole number
 let cpuGuess;
 
+// Variable that stores the user feedback
+let guessFeedback;
+
 function startApp() {
-  console.log("Gæt nummer 1");
+  console.log("step 1 - StartApp");
 
   addEentlisteners();
 }
 
+// adds button event listeners to buttons
 function addEentlisteners() {
   document
     .querySelector("#start-game-btn")
@@ -43,30 +47,40 @@ function addEentlisteners() {
 
 // Starts a new game when start-btn is clicked
 function startGame() {
-  console.log("startGameClicked");
+  console.log("step 2 - startGameClicked");
   liveGame();
 }
 
+// Sets the first guess
 function liveGame() {
   cpuGuess = 24;
   calculateCpuGuess();
 }
 
-// Sets guess too low
+// Input if the guess too low
 function guessTooLow() {
-  console.log("loowGuessClicked");
-  calculateCpuGuess();
+  console.log("step 5 - loowGuessClicked");
+  guessFeedback = -1;
+  recieveFeedbackInput();
 }
 
-// Set guess is too high
+// Input if the guess is too high
 function guessTooHigh() {
-  console.log("highGuessClicked");
-  calculateCpuGuess();
+  console.log("step 5 - highGuessClicked");
+  guessFeedback = 1;
+  recieveFeedbackInput();
 }
 
-// Set guess is correct
+// Input if the guess is correct
 function guessCorrect() {
-  console.log("guessCorrectClicked");
+  console.log("step 5 - guessCorrectClicked");
+  guessFeedback = 0;
+  recieveFeedbackInput();
+}
+
+function recieveFeedbackInput() {
+  console.log("step 6 - feedback is - ", guessFeedback);
+  setGuessFeedbackMessage();
   calculateCpuGuess();
 }
 
@@ -77,17 +91,56 @@ function guessCorrect() {
 // ... and that is displayed
 // New guess is calculated - last guess/ too high or too low
 
+// Calculates a new CPU guess
 function calculateCpuGuess() {
+  console.log("step 3 - Make a new guess");
   cpuGuess = cpuGuess + 1;
   const currentCpuGuess = cpuGuess;
+
   displayCpuGuess(currentCpuGuess);
 }
 
+// Displays the current cpu - guess
 function displayCpuGuess(calculateCpuGuess) {
+  console.log("step 4 - display guess");
   const currentgGuessDisplay = document.querySelector("#current-cpu-guess");
-  currentgGuessDisplay.innerHTML = `My nex guess is - ${calculateCpuGuess} `;
+  currentgGuessDisplay.innerHTML = `My nex guess is ${calculateCpuGuess} `;
 }
 
-function displayCpuGuessLog() {}
+function setGuessFeedbackMessage() {
+  console.log("Step 7 - Set guess feedback!");
+
+  // switch that sets the feedback message
+  let guessFeedbackMessage = "";
+
+  switch (guessFeedback) {
+    case -1:
+      guessFeedbackMessage = "too low";
+      displayCpuGuessLog("too low");
+      break;
+    case 1:
+      guessFeedbackMessage = "too high";
+      displayCpuGuessLog("too low");
+      break;
+    case 0:
+      guessFeedbackMessage = "correct";
+      displayCpuGuessLog("too low");
+      break;
+  }
+}
+
+// Updates the cpu guess log
+function displayCpuGuessLog(guessFeedbackMessage) {
+  console.log(
+    "step 8 - display guess log ",
+    cpuGuess,
+    " and ",
+    guessFeedbackMessage
+  );
+
+  // List for previous guesses - stings
+  // const cpuGugessLogArray = [];
+  // const newCpuGuessLog = `I'm guessing ${cpuGuess} - that is ${guessFeedbackMessage}`;
+}
 
 // What happens if there is a problem...
