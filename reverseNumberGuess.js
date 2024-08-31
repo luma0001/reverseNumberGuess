@@ -54,6 +54,9 @@ function startGame() {
 // Sets the first guess
 function liveGame() {
   cpuGuess = 24;
+  // clears last games log list
+  clearCpuGuessLog();
+
   calculateCpuGuess();
 }
 
@@ -139,8 +142,23 @@ function displayCpuGuessLog(guessFeedbackMessage) {
   );
 
   // List for previous guesses - stings
-  // const cpuGugessLogArray = [];
-  // const newCpuGuessLog = `I'm guessing ${cpuGuess} - that is ${guessFeedbackMessage}`;
+  const cpuGugessLogArray = [];
+  const newCpuGuessLog = `I'm guessing ${cpuGuess} - that is ${guessFeedbackMessage}`;
+  cpuGugessLogArray.push(newCpuGuessLog);
+
+  console.log("cpu array", cpuGugessLogArray);
+
+  for (const log of cpuGugessLogArray) {
+    const logElementHtml = `<li>${newCpuGuessLog}</li>`;
+
+    document
+      .querySelector("#cpu-guesses")
+      .insertAdjacentHTML("beforeend", logElementHtml);
+  }
+}
+
+function clearCpuGuessLog() {
+  document.getElementById("cpu-guesses").innerHTML = "";
 }
 
 // What happens if there is a problem...
