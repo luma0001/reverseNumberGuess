@@ -10,12 +10,31 @@ let guessFeedback;
 
 function startApp() {
   console.log("step 1 - StartApp");
-
-  addEentlisteners();
+  hideGameArea();
+  showStartGameBtn();
+  addEevntlisteners();
 }
 
+function hideGameArea() {
+  document.querySelector("#active-game-section").classList.add("hidden");
+}
+
+function showGameArea() {
+  document.querySelector("#active-game-section").classList.remove("hidden");
+}
+
+function hideStartGameBtn() {
+  document.querySelector("#start-game-btn").classList.add("hidden");
+}
+
+function showStartGameBtn() {
+  document.querySelector("#start-game-btn").classList.remove("hidden");
+}
+
+
+
 // adds button event listeners to buttons
-function addEentlisteners() {
+function addEevntlisteners() {
   document
     .querySelector("#start-game-btn")
     .addEventListener("click", startGame);
@@ -48,15 +67,17 @@ function addEentlisteners() {
 // Starts a new game when start-btn is clicked
 function startGame() {
   console.log("step 2 - startGameClicked");
+  //document.querySelector("#start-screen-modal").showModal();
   liveGame();
 }
 
 // Sets the first guess
 function liveGame() {
+  hideStartGameBtn();
+  showGameArea();
   cpuGuess = 24;
   // clears last games log list
   clearCpuGuessLog();
-
   calculateCpuGuess();
 }
 
@@ -87,6 +108,7 @@ function recieveFeedbackInput() {
   calculateCpuGuess();
 }
 
+// What happens if there is a problem...
 // CPU makes a guess.
 // Input is given...
 // Last guess and input is displayed
@@ -148,6 +170,7 @@ function displayCpuGuessLog(guessFeedbackMessage) {
 
   console.log("cpu array", cpuGugessLogArray);
 
+  // Log the log array and display the html
   for (const log of cpuGugessLogArray) {
     const logElementHtml = `<li>${newCpuGuessLog}</li>`;
 
@@ -160,5 +183,3 @@ function displayCpuGuessLog(guessFeedbackMessage) {
 function clearCpuGuessLog() {
   document.getElementById("cpu-guesses").innerHTML = "";
 }
-
-// What happens if there is a problem...

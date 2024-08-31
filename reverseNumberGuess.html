@@ -11,26 +11,28 @@
     lavt
 
     <main>
-      <modal id="start-screen">
+      <section id="start-screen">
         <p>Tænk på et tal og tryk - jeg er klar!</p>
         <button id="start-game-btn">Jeg er klar!</button>
-      </modal>
-
-      <section id="cpu-guess-log">
-        <div id="cpu-guess-count">0</div>
-        <ul id="cpu-guesses">
-          <li>I'm guessing 22 - that's too low</li>
-          <li>I'm guessing 77 - that's too high</li>
-          <li>I'm guessing 33 - that's too low</li>
-          <li>I'm guessing 55 - that's correct</li>
-          <li>Hurray! - let's go again</li>
-        </ul>
       </section>
-      <section id="rate-cpu-guess">
-        <div id="current-cpu-guess">My currect guess is - 0</div>
-        <button id="guess-too-low-btn">For lavt</button>
-        <button id="guess-correct-btn">Korrekt!</button>
-        <button id="guess-too-high-btn">For højt</button>
+
+      <section id="active-game-section">
+        <article id="cpu-guess-log">
+          <div id="cpu-guess-count">0</div>
+          <ul id="cpu-guesses">
+            <li>I'm guessing 22 - that's too low</li>
+            <li>I'm guessing 77 - that's too high</li>
+            <li>I'm guessing 33 - that's too low</li>
+            <li>I'm guessing 55 - that's correct</li>
+            <li>Hurray! - let's go again</li>
+          </ul>
+        </article>
+        <article id="rate-cpu-guess">
+          <div id="current-cpu-guess">My currect guess is - 0</div>
+          <button id="guess-too-low-btn">For lavt</button>
+          <button id="guess-correct-btn">Korrekt!</button>
+          <button id="guess-too-high-btn">For højt</button>
+        </article>
       </section>
     </main>
 
