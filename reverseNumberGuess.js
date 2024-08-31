@@ -1,5 +1,6 @@
-window.addEventListener("load", startApp);
+"use strict";
 
+window.addEventListener("load", startApp);
 
 // Global variable that stores the cpu-guess - type is a whole number
 let cpuGuess;
@@ -43,21 +44,30 @@ function addEentlisteners() {
 // Starts a new game when start-btn is clicked
 function startGame() {
   console.log("startGameClicked");
+  liveGame();
+}
+
+function liveGame() {
+  cpuGuess = 24;
+  calculateCpuGuess();
 }
 
 // Sets guess too low
 function guessTooLow() {
   console.log("loowGuessClicked");
+  calculateCpuGuess();
 }
 
 // Set guess is too high
 function guessTooHigh() {
   console.log("highGuessClicked");
+  calculateCpuGuess();
 }
 
 // Set guess is correct
 function guessCorrect() {
   console.log("guessCorrectClicked");
+  calculateCpuGuess();
 }
 
 // CPU makes a guess.
@@ -67,9 +77,16 @@ function guessCorrect() {
 // ... and that is displayed
 // New guess is calculated - last guess/ too high or too low
 
-function calculateCpuGuess() {}
+function calculateCpuGuess() {
+  cpuGuess = cpuGuess + 1;
+  const currentCpuGuess = cpuGuess;
+  displayCpuGuess(currentCpuGuess);
+}
 
-function displayCpuGuess() {}
+function displayCpuGuess(calculateCpuGuess) {
+  const currentgGuessDisplay = document.querySelector("#current-cpu-guess");
+  currentgGuessDisplay.innerHTML = `My nex guess is - ${calculateCpuGuess} `;
+}
 
 function displayCpuGuessLog() {}
 
