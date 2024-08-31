@@ -8,6 +8,8 @@ let cpuGuess;
 // Variable that stores the user feedback
 let guessFeedback;
 
+let roundCount;
+
 function startApp() {
   console.log("step 1 - StartApp");
   hideGameArea();
@@ -30,8 +32,6 @@ function hideStartGameBtn() {
 function showStartGameBtn() {
   document.querySelector("#start-game-btn").classList.remove("hidden");
 }
-
-
 
 // adds button event listeners to buttons
 function addEevntlisteners() {
@@ -76,6 +76,7 @@ function liveGame() {
   hideStartGameBtn();
   showGameArea();
   cpuGuess = 24;
+  roundCount = 0;
   // clears last games log list
   clearCpuGuessLog();
   calculateCpuGuess();
@@ -116,8 +117,22 @@ function recieveFeedbackInput() {
 // ... and that is displayed
 // New guess is calculated - last guess/ too high or too low
 
+function setRoundCount() {
+  document.querySelector("#cpu-guess-count").innerHTML = "";
+  roundCount = roundCount + 1;
+  displayRoundCount();
+}
+
+function displayRoundCount() {
+  document.querySelector(
+    "#cpu-guess-count"
+  ).innerHTML = `Numbers of guesses = ${roundCount}`;
+}
+
 // Calculates a new CPU guess
 function calculateCpuGuess() {
+  setRoundCount();
+
   console.log("step 3 - Make a new guess");
   cpuGuess = cpuGuess + 1;
   const currentCpuGuess = cpuGuess;
