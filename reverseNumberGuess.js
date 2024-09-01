@@ -1,6 +1,6 @@
 "use strict";
 
-// del 1
+// del.1
 
 window.addEventListener("load", startApp);
 
