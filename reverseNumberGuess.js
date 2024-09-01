@@ -1,5 +1,7 @@
 "use strict";
 
+// del 1
+
 window.addEventListener("load", startApp);
 
 // Stores the li elements for the game interface and guess log - type <li>
