@@ -2,21 +2,22 @@
 
 window.addEventListener("load", startApp);
 
-// Global variable that stores the cpu-guess - type is a whole number
+// Variables
+let cpuGuessLogArray;
 let cpuGuess;
-
-// Variable that stores the user feedback
 let guessFeedback;
-
 let roundCount;
+let minGuessLimit;
+let maxGuessLimit;
 
 function startApp() {
   console.log("step 1 - StartApp");
-  hideGameArea();
+  // hideGameArea();
   showStartGameBtn();
-  addEevntlisteners();
+  addStartBtnEventListener();
 }
 
+// Shows or hides elements
 function hideGameArea() {
   document.querySelector("#active-game-section").classList.add("hidden");
 }
@@ -33,168 +34,192 @@ function showStartGameBtn() {
   document.querySelector("#start-game-btn").classList.remove("hidden");
 }
 
-// adds button event listeners to buttons
-function addEevntlisteners() {
+function addStartBtnEventListener() {
   document
     .querySelector("#start-game-btn")
     .addEventListener("click", startGame);
-  document
-    .getElementById("guess-too-low-btn")
-    .addEventListener("click", guessTooLow);
-  document
-    .getElementById("guess-correct-btn")
-    .addEventListener("click", guessTooHigh);
-  document
-    .getElementById("guess-too-high-btn")
-    .addEventListener("click", guessCorrect);
 }
-
-// function removeEvenlisteners() {
-//   document
-//     .getElementById("start-game-btn")
-//     .removeEvenlistener("click", startGame);
-//   document
-//     .getElementById("guess-too-low-btn")
-//     .removeEvenlistener("click", guessTooLow);
-//   document
-//     .getElementById("guess-correct-btn")
-//     .removeEvenlistener("click", guessTooHigh);
-//   document
-//     .getElementById("guess-too-high-btn")
-//     .removeEvenlistener("click", guessCorrect);
-// }
 
 // Starts a new game when start-btn is clicked
 function startGame() {
   console.log("step 2 - startGameClicked");
-  //document.querySelector("#start-screen-modal").showModal();
   liveGame();
 }
 
-// Sets the first guess
 function liveGame() {
   hideStartGameBtn();
   showGameArea();
+  cpuGuessLogArray = [];
+  guessFeedback = 3;
   cpuGuess = 24;
   roundCount = 0;
-  // clears last games log list
+  maxGuessLimit = 0;
+  maxGuessLimit = 100;
   clearCpuGuessLog();
   calculateCpuGuess();
 }
 
-// Input if the guess too low
-function guessTooLow() {
-  console.log("step 5 - loowGuessClicked");
-  guessFeedback = -1;
-  recieveFeedbackInput();
-}
-
-// Input if the guess is too high
-function guessTooHigh() {
-  console.log("step 5 - highGuessClicked");
-  guessFeedback = 1;
-  recieveFeedbackInput();
-}
-
-// Input if the guess is correct
-function guessCorrect() {
-  console.log("step 5 - guessCorrectClicked");
-  guessFeedback = 0;
-  recieveFeedbackInput();
-}
-
-function recieveFeedbackInput() {
-  console.log("step 6 - feedback is - ", guessFeedback);
-  setGuessFeedbackMessage();
-  calculateCpuGuess();
-}
-
-// What happens if there is a problem...
-// CPU makes a guess.
-// Input is given...
-// Last guess and input is displayed
-// CPU guess counter is increased
-// ... and that is displayed
-// New guess is calculated - last guess/ too high or too low
-
-function setRoundCount() {
-  document.querySelector("#cpu-guess-count").innerHTML = "";
-  roundCount = roundCount + 1;
-  displayRoundCount();
-}
-
-function displayRoundCount() {
-  document.querySelector(
-    "#cpu-guess-count"
-  ).innerHTML = `Numbers of guesses = ${roundCount}`;
-}
-
-// Calculates a new CPU guess
 function calculateCpuGuess() {
-  setRoundCount();
-
   console.log("step 3 - Make a new guess");
-  cpuGuess = cpuGuess + 1;
-  const currentCpuGuess = cpuGuess;
 
-  displayCpuGuess(currentCpuGuess);
+  if (guessFeedback == 3) {
+    cpuGuess += 1;
+  } else if (guessFeedback === -1) {
+    // increase the floor¨
+    console.log("too low");
+  } else if (guessFeedback === 1) {
+    //lower the
+    console.log("too to high");
+  } else if (cpuGuess === 0) {
+    console.log("WIN");
+    gameOver();
+  }
+
+  displayCpuGuess();
 }
 
-// Displays the current cpu - guess
-function displayCpuGuess(calculateCpuGuess) {
+// function generateNumberBetween(min, max) {
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
+
+// Displays the current CPU guess
+function displayCpuGuess() {
   console.log("step 4 - display guess");
-  const currentgGuessDisplay = document.querySelector("#current-cpu-guess");
-  currentgGuessDisplay.innerHTML = `My nex guess is ${calculateCpuGuess} `;
+  const logItem = document.createElement("li");
+  logItem.textContent = `I'm guessing ${cpuGuess}`;
+  cpuGuessLogArray.push(logItem);
+  displayLogWithButtons(logItem);
+}
+
+function clearCpuGuessLog() {
+  document.getElementById("cpu-guesses").innerHTML = "";
+}
+
+function displayLogWithButtons(logItem) {
+  console.log("step 6 - display log");
+
+  // loops on the log array
+  loopLogs();
+
+  // Create the 3 buttons
+  const lowButton = document.createElement("button");
+  lowButton.textContent = "For lavt";
+  lowButton.addEventListener("click", guessTooLow);
+
+  const correctButton = document.createElement("button");
+  correctButton.textContent = "Korrekt!";
+  correctButton.addEventListener("click", guessCorrect);
+
+  const highButton = document.createElement("button");
+  highButton.textContent = "For højt";
+  highButton.addEventListener("click", guessTooHigh);
+
+  // Appends the buttons as the las element in the log array
+  logItem.appendChild(lowButton);
+  logItem.appendChild(correctButton);
+  logItem.appendChild(highButton);
+
+  // Append the enite log li-item to the log array
+  document.querySelector("#cpu-guesses").appendChild(logItem);
+}
+
+function loopLogs() {
+  console.log("loop on log array");
+  clearCpuGuessLog();
+
+  // Re-display all items in the log array
+  for (const logItem of cpuGuessLogArray) {
+    document.querySelector("#cpu-guesses").appendChild(logItem);
+  }
+}
+
+// the functions that handles the button inputs
+function guessTooLow() {
+  console.log("step 7 - loowGuessClicked");
+  guessFeedback = -1;
+  minGuessLimit = cpuGuess + 1;
+  receiveFeedbackInput();
+}
+
+function guessTooHigh() {
+  console.log("step 7 - highGuessClicked");
+  guessFeedback = 1;
+  maxGuessLimit = cpuGuess - 1;
+  receiveFeedbackInput();
+}
+
+function guessCorrect() {
+  console.log("step 7 - guessCorrectClicked");
+  guessFeedback = 0;
+  receiveFeedbackInput();
+}
+
+function receiveFeedbackInput() {
+  console.log("step 8 - feedback is - ", guessFeedback);
+  // removes the last element in the cpu log array
+  removeElement();
+
+  setGuessFeedbackMessage();
+}
+
+function removeElement() {
+  cpuGuessLogArray.pop();
+  console.log(cpuGuessLogArray);
 }
 
 function setGuessFeedbackMessage() {
-  console.log("Step 7 - Set guess feedback!");
+  console.log("Step 9 - Set guess feedback!");
 
-  // switch that sets the feedback message
   let guessFeedbackMessage = "";
 
   switch (guessFeedback) {
     case -1:
       guessFeedbackMessage = "too low";
-      displayCpuGuessLog("too low");
+      displayCpuGuessLog(guessFeedbackMessage);
       break;
     case 1:
       guessFeedbackMessage = "too high";
-      displayCpuGuessLog("too low");
+      displayCpuGuessLog(guessFeedbackMessage);
       break;
     case 0:
       guessFeedbackMessage = "correct";
-      displayCpuGuessLog("too low");
+      gameOver();
       break;
   }
 }
 
-// Updates the cpu guess log
-function displayCpuGuessLog(guessFeedbackMessage) {
-  console.log(
-    "step 8 - display guess log ",
-    cpuGuess,
-    " and ",
-    guessFeedbackMessage
-  );
-
-  // List for previous guesses - stings
-  const cpuGugessLogArray = [];
-  const newCpuGuessLog = `I'm guessing ${cpuGuess} - that is ${guessFeedbackMessage}`;
-  cpuGugessLogArray.push(newCpuGuessLog);
-
-  console.log("cpu array", cpuGugessLogArray);
-
-  // Log the log array and display the html
-  for (const log of cpuGugessLogArray) {
-    const logElementHtml = `<li>${newCpuGuessLog}</li>`;
-
-    document
-      .querySelector("#cpu-guesses")
-      .insertAdjacentHTML("beforeend", logElementHtml);
-  }
+function displayCpuGuessLog(message) {
+  console.log("step 10 - displayLog");
+  const logHTML = `My guess is ${cpuGuess} - it was ${message}`;
+  addFeedbackToLog(logHTML);
 }
 
-function clearCpuGuessLog() {
-  document.getElementById("cpu-guesses").innerHTML = "";
+function addFeedbackToLog(newHTML) {
+  console.log("step 12 - add current feedback to log");
+  const logItem = document.createElement("li");
+  logItem.textContent = newHTML;
+  cpuGuessLogArray.push(logItem);
+  displayLogWithoutButtons();
+}
+
+function displayLogWithoutButtons() {
+  console.log("step 13 - display log");
+  loopLogs();
+  // Redo the process from Calculate CPU guess
+  guessAgain();
+}
+
+function guessAgain() {
+  console.log("step 14 a - guess again");
+  calculateCpuGuess();
+}
+
+function gameOver() {
+  console.log("step 14 b - game over!");
+
+  // Insert the game over message as last child - instead of the buttons
+  const lastLogItem = document.querySelector("#cpu-guesses li:last-child");
+  if (lastLogItem) {
+    lastLogItem.innerHTML = "Hurra - I guessed it!"; // Replaces the content with the final message
+  }
 }
