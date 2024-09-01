@@ -12,7 +12,6 @@ let maxGuessLimit;
 
 function startApp() {
   console.log("step 1 - StartApp");
-  // hideGameArea();
   showStartGameBtn();
   addStartBtnEventListener();
 }
@@ -223,7 +222,5 @@ function gameOver() {
 
   // Insert the game over message as last child - instead of the buttons
   const lastLogItem = document.querySelector("#cpu-guesses li:last-child");
-  if (lastLogItem) {
-    lastLogItem.innerHTML = "Hurra - I guessed it!"; // Replaces the content with the final message
-  }
+  lastLogItem.innerHTML = "Hurra - I guessed it!"; 
 }
