@@ -4,10 +4,13 @@ window.addEventListener("load", startApp);
 
 // Variables
 let cpuGuessLogArray;
+
 let cpuGuess;
+
 let guessFeedback;
-let roundCount;
+
 let minGuessLimit;
+
 let maxGuessLimit;
 
 function startApp() {
@@ -51,7 +54,6 @@ function liveGame() {
   cpuGuessLogArray = [];
   guessFeedback = 3;
   cpuGuess = 24;
-  roundCount = 0;
   clearCpuGuessLog();
   calculateCpuGuess();
 }
