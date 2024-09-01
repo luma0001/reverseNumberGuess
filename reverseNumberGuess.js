@@ -116,15 +116,15 @@ function displayLogWithButtons(logItem) {
 
   // Create the 3 buttons
   const lowButton = document.createElement("button");
-  lowButton.textContent = "For lavt";
+  lowButton.textContent = "Too low";
   lowButton.addEventListener("click", guessTooLow);
 
   const correctButton = document.createElement("button");
-  correctButton.textContent = "Korrekt!";
+  correctButton.textContent = "Corret!";
   correctButton.addEventListener("click", guessCorrect);
 
   const highButton = document.createElement("button");
-  highButton.textContent = "For højt";
+  highButton.textContent = "Too high";
   highButton.addEventListener("click", guessTooHigh);
 
   // Appends the buttons as the las element in the log array
