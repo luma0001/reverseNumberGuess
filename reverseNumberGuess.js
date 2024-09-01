@@ -53,8 +53,6 @@ function liveGame() {
   guessFeedback = 3;
   cpuGuess = 24;
   roundCount = 0;
-  maxGuessLimit = 0;
-  maxGuessLimit = 100;
   clearCpuGuessLog();
   calculateCpuGuess();
 }
@@ -63,24 +61,30 @@ function calculateCpuGuess() {
   console.log("step 3 - Make a new guess");
 
   if (guessFeedback == 3) {
-    cpuGuess += 1;
+    console.log("First guess");
+    minGuessLimit = 0;
+    maxGuessLimit = 100;
   } else if (guessFeedback === -1) {
-    // increase the floor¨
-    console.log("too low");
+    console.log("guess too low");
+    minGuessLimit = cpuGuess + 1;
   } else if (guessFeedback === 1) {
-    //lower the
-    console.log("too to high");
-  } else if (cpuGuess === 0) {
-    console.log("WIN");
-    gameOver();
+    console.log("guess too to high");
+    maxGuessLimit = cpuGuess - 1;
   }
 
-  displayCpuGuess();
+  if (maxGuessLimit > minGuessLimit) {
+    cpuGuess = generateNumberBetween(minGuessLimit, maxGuessLimit);
+    displayCpuGuess();
+  } else {
+    alert(
+      `Something went wrong! Your number is minimum ${minGuessLimit} and maximum ${maxGuessLimit}: please restart!`
+    );
+  }
 }
 
-// function generateNumberBetween(min, max) {
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
+function generateNumberBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // Displays the current CPU guess
 function displayCpuGuess() {
