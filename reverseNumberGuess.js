@@ -2,15 +2,15 @@
 
 window.addEventListener("load", startApp);
 
-// Variables
+// Stores the li elements for the game interface and guess log - type <li>
 let cpuGuessLogArray;
-
+// stores the latest cpu guess - type int
 let cpuGuess;
-
+// stores the latest user input  type int (-1, 1 or 0)
 let guessFeedback;
-
+// stores the latest guess set as "too low" - type int
 let minGuessLimit;
-
+// stores the latest guess set as "too high" - type int
 let maxGuessLimit;
 
 function startApp() {
@@ -48,12 +48,14 @@ function startGame() {
   liveGame();
 }
 
+// sets - resets all the variables
 function liveGame() {
   hideStartGameBtn();
   showGameArea();
+  // sets the log array as an empty array
   cpuGuessLogArray = [];
+  // set the guess feed back to 3
   guessFeedback = 3;
-  cpuGuess = 24;
   clearCpuGuessLog();
   calculateCpuGuess();
 }
@@ -61,21 +63,25 @@ function liveGame() {
 function calculateCpuGuess() {
   console.log("step 3 - Make a new guess");
 
-  if (guessFeedback == 3) {
+  if (guessFeedback === -1) {
+    console.log("guess too low");
+    minGuessLimit = cpuGuess;
+  } else if (guessFeedback === 1) {
+    console.log("guess too to high");
+    maxGuessLimit = cpuGuess;
+  } else {
     console.log("First guess");
     minGuessLimit = 0;
     maxGuessLimit = 100;
-  } else if (guessFeedback === -1) {
-    console.log("guess too low");
-    minGuessLimit = cpuGuess + 1;
-  } else if (guessFeedback === 1) {
-    console.log("guess too to high");
-    maxGuessLimit = cpuGuess - 1;
   }
 
   if (maxGuessLimit > minGuessLimit) {
     cpuGuess = generateNumberBetween(minGuessLimit, maxGuessLimit);
     displayCpuGuess();
+  } else if (maxGuessLimit === minGuessLimit) {
+    alert(
+      `Didn't I win?! Your number is minimum ${minGuessLimit} and maximum ${maxGuessLimit}: please restart!`
+    );
   } else {
     alert(
       `Something went wrong! Your number is minimum ${minGuessLimit} and maximum ${maxGuessLimit}: please restart!`
@@ -224,5 +230,5 @@ function gameOver() {
 
   // Insert the game over message as last child - instead of the buttons
   const lastLogItem = document.querySelector("#cpu-guesses li:last-child");
-  lastLogItem.innerHTML = "Hurra - I guessed it!"; 
+  lastLogItem.innerHTML = "Hurra - I guessed it!";
 }
