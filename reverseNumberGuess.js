@@ -1,6 +1,7 @@
 "use strict";
 
-// del.1
+// del.2
+// NB: spillet har en bug hvis man too low - to high om og om igen. Så stopper maskinen på 66 og udelukker 67 som mulighed, grundet Math.floor(). 
 
 window.addEventListener("load", startApp);
 
@@ -59,10 +60,10 @@ function liveGame() {
   // set the guess feed back to 3
   guessFeedback = 3;
   clearCpuGuessLog();
-  calculateCpuGuess();
+  findHalfOfOptions();
 }
 
-function calculateCpuGuess() {
+function findHalfOfOptions() {
   console.log("step 3 - Make a new guess");
 
   if (guessFeedback === -1) {
@@ -77,27 +78,35 @@ function calculateCpuGuess() {
     maxGuessLimit = 100;
   }
 
-  if (maxGuessLimit > minGuessLimit) {
-    cpuGuess = generateNumberBetween(minGuessLimit, maxGuessLimit);
+  if (minGuessLimit === maxGuessLimit - 1 || maxGuessLimit <= minGuessLimit) {
+    inconsiceInputDetected();
+  } else if (maxGuessLimit > minGuessLimit) {
+    cpuGuess = returnMean(minGuessLimit, maxGuessLimit);
     displayCpuGuess();
-  } else if (maxGuessLimit === minGuessLimit) {
-    alert(
-      `Didn't I win?! Your number is minimum ${minGuessLimit} and maximum ${maxGuessLimit}: please restart!`
-    );
-  } else {
-    alert(
-      `Something went wrong! Your number is minimum ${minGuessLimit} and maximum ${maxGuessLimit}: please restart!`
-    );
   }
 }
 
-function generateNumberBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function inconsiceInputDetected() {
+  gameOverByDeduction();
+}
+
+// Finds the mean
+function returnMean(min, max) {
+  return Math.floor((max - min) / 2 + min);
 }
 
 // Displays the current CPU guess
 function displayCpuGuess() {
   console.log("step 4 - display guess");
+  console.log(
+    "Max: ",
+    maxGuessLimit,
+    ". Guess: ",
+    cpuGuess,
+    ". Min: ",
+    minGuessLimit
+  );
+
   const logItem = document.createElement("li");
   logItem.textContent = `I'm guessing ${cpuGuess}`;
   cpuGuessLogArray.push(logItem);
@@ -150,6 +159,7 @@ function loopLogs() {
 function guessTooLow() {
   console.log("step 7 - loowGuessClicked");
   guessFeedback = -1;
+  //min-guess-limit had 1 added to raise the floor
   minGuessLimit = cpuGuess + 1;
   receiveFeedbackInput();
 }
@@ -157,7 +167,7 @@ function guessTooLow() {
 function guessTooHigh() {
   console.log("step 7 - highGuessClicked");
   guessFeedback = 1;
-  maxGuessLimit = cpuGuess - 1;
+  maxGuessLimit = cpuGuess;
   receiveFeedbackInput();
 }
 
@@ -196,7 +206,7 @@ function setGuessFeedbackMessage() {
       break;
     case 0:
       guessFeedbackMessage = "correct";
-      gameOver();
+      gameOverBySuccess();
       break;
   }
 }
@@ -224,10 +234,16 @@ function displayLogWithoutButtons() {
 
 function guessAgain() {
   console.log("step 14 a - guess again");
-  calculateCpuGuess();
+  findHalfOfOptions();
 }
 
-function gameOver() {
+function gameOverByDeduction() {
+  console.log("step 14 c - guess again");
+  const lastLogItem = document.querySelector("#cpu-guesses li:last-child");
+  lastLogItem.innerHTML = `I got it! Your number must be ${cpuGuess}.`;
+}
+
+function gameOverBySuccess() {
   console.log("step 14 b - game over!");
 
   // Insert the game over message as last child - instead of the buttons
