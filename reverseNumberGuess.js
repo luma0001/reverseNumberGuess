@@ -1,7 +1,6 @@
 "use strict";
 
 // del.2
-// NB: spillet har en bug hvis man too low - to high om og om igen. Så stopper maskinen på 66 og udelukker 67 som mulighed, grundet Math.floor(). 
 
 window.addEventListener("load", startApp);
 
@@ -15,6 +14,8 @@ let guessFeedback;
 let minGuessLimit;
 // stores the latest guess set as "too high" - type int
 let maxGuessLimit;
+// Stores the amounts of rounds
+let roundsCounter;
 
 function startApp() {
   console.log("step 1 - StartApp");
@@ -57,13 +58,16 @@ function liveGame() {
   showGameArea();
   // sets the log array as an empty array
   cpuGuessLogArray = [];
-  // set the guess feed back to 3
+  // set the guess feed back to 3 - the default option
   guessFeedback = 3;
+  // set the rounds-counter at 0
+  roundsCounter = 0;
   clearCpuGuessLog();
-  findHalfOfOptions();
+  generateCpuGuess();
 }
 
-function findHalfOfOptions() {
+//
+function generateCpuGuess() {
   console.log("step 3 - Make a new guess");
 
   if (guessFeedback === -1) {
@@ -78,19 +82,23 @@ function findHalfOfOptions() {
     maxGuessLimit = 100;
   }
 
+  // Checks if the min - max guesses face a paradox
   if (minGuessLimit === maxGuessLimit - 1 || maxGuessLimit <= minGuessLimit) {
-    inconsiceInputDetected();
+    gameOverByDeduction();
+    // Continues the game if max is still greate than min
   } else if (maxGuessLimit > minGuessLimit) {
+    incrementRounds();
     cpuGuess = returnMean(minGuessLimit, maxGuessLimit);
     displayCpuGuess();
   }
 }
 
-function inconsiceInputDetected() {
-  gameOverByDeduction();
+// Increase the rounds-counter by 1
+function incrementRounds() {
+  roundsCounter = roundsCounter + 1;
 }
 
-// Finds the mean
+// Returns the mean
 function returnMean(min, max) {
   return Math.floor((max - min) / 2 + min);
 }
@@ -145,8 +153,10 @@ function displayLogWithButtons(logItem) {
   document.querySelector("#cpu-guesses").appendChild(logItem);
 }
 
+// loops the array of guess logs
 function loopLogs() {
   console.log("loop on log array");
+
   clearCpuGuessLog();
 
   // Re-display all items in the log array
@@ -179,12 +189,13 @@ function guessCorrect() {
 
 function receiveFeedbackInput() {
   console.log("step 8 - feedback is - ", guessFeedback);
-  // removes the last element in the cpu log array
+  // removes the last element in the cpu log array - the ones with buttons
   removeElement();
 
   setGuessFeedbackMessage();
 }
 
+// Removes the former element in the guess array
 function removeElement() {
   cpuGuessLogArray.pop();
   console.log(cpuGuessLogArray);
@@ -225,6 +236,7 @@ function addFeedbackToLog(newHTML) {
   displayLogWithoutButtons();
 }
 
+// Display the CPU guess and user input as text
 function displayLogWithoutButtons() {
   console.log("step 13 - display log");
   loopLogs();
@@ -232,21 +244,45 @@ function displayLogWithoutButtons() {
   guessAgain();
 }
 
+// Repeats the process from generateCpuGuess "step 3"
 function guessAgain() {
   console.log("step 14 a - guess again");
-  findHalfOfOptions();
+  generateCpuGuess();
 }
 
+// Stops the game and adds a message if the answer is found by deduction
 function gameOverByDeduction() {
   console.log("step 14 c - guess again");
+
+  // Gets a win message to concatenate for game over reply
+  let winMessage = winMessageByRounds();
+
+  // Inserts the message as last element - instead of the buttons
   const lastLogItem = document.querySelector("#cpu-guesses li:last-child");
-  lastLogItem.innerHTML = `I got it! Your number must be ${cpuGuess}.`;
+  lastLogItem.innerHTML = `I got it! Your number must be ${cpuGuess}. ${winMessage}`;
 }
 
+// Stops the game and adds a message if the user input was: "correct!"
 function gameOverBySuccess() {
   console.log("step 14 b - game over!");
 
+  // Gets a win message to concatenate for game over reply
+  let winMessage = winMessageByRounds();
+
   // Insert the game over message as last child - instead of the buttons
   const lastLogItem = document.querySelector("#cpu-guesses li:last-child");
-  lastLogItem.innerHTML = "Hurra - I guessed it!";
+  lastLogItem.innerHTML = `Hurra - I guessed it! ${winMessage}`;
+}
+
+// Retun a win message
+function winMessageByRounds() {
+  if (roundsCounter > 5) {
+    return ` Nice, but I can do better than ${roundsCounter} rounds`;
+  } else if (roundsCounter > 3) {
+    return `In just ${roundsCounter} rounds, I did alright don't you think `;
+  } else if (roundsCounter > 1) {
+    return ` Wooow I'm the best! ${roundsCounter} rounds baby`;
+  } else if (roundsCounter === 1) {
+    return `That was too easy, pick a better number next time`;
+  }
 }
